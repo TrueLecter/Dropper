@@ -17,13 +17,6 @@ public class DropperPlayer {
 		this.tube = null;
 	}
 	
-	public DropperPlayer(Player player, Gamemode gmode, Tube tube){
-		this.gamer = player;
-		this.gm = gmode;
-		this.fails = 0;
-		this.tube = tube;
-	}
-	
 	public Player getPlayer(){
 		return this.gamer;
 	}
