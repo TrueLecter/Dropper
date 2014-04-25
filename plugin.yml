@@ -1,0 +1,3 @@
+name: Dropper
+main: truelecter.dropper.Dropper
+version: 0.1
