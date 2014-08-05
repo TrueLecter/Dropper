@@ -1,3 +1,30 @@
 name: Dropper
 main: truelecter.dropper.Dropper
+depend: [Vault]
+authors: [_TrueLecter_]
 version: 0.1
+commands:
+   setlobbylocation:
+      description: Lobby location
+      usage: /<command>
+   setjumpspawnlocation:
+      description: Set location for jump
+      usage: /<command>
+   setgamespawnlocation: 
+      description: Set location for players, who jumped.
+      usage: /<command>  
+   setblock1:
+      description: 1-st corner block for pool
+      usage: /<command>  
+   setblock2:
+      description: 2-nd corner block for pool
+      usage: /<command>  
+   endgame:
+      description: Ends game process
+      usage: /<command>
+   coins:
+      description: Shows your coins
+      usage: /<command>
+   startgame:
+      description: Force start game
+      usage: /<command>

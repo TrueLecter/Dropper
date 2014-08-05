@@ -1,51 +1,95 @@
 package truelecter.dropper.player;
 
-import org.bukkit.entity.Player;
+import java.util.Timer;
+import java.util.TimerTask;
 
-import truelecter.dropper.game.Tube;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 
 public class DropperPlayer {
 	private Player gamer = null;
 	private Gamemode gm = Gamemode.GAMER;
-	private int fails;
-	private Tube tube;
-	
-	public DropperPlayer(Player player, Gamemode gmode){
+	private int points;
+	private boolean isJumping;
+	private Timer time = new Timer();
+	private int counter = 30;
+	private boolean left = false;
+
+	public boolean hasLeft() {
+		return left;
+	}
+
+	public void leave() {
+		this.left = true;
+	}
+
+	public DropperPlayer(Player player, Gamemode gmode) {
 		this.gamer = player;
 		this.gm = gmode;
-		this.fails = 0;
-		this.tube = null;
+		this.points = 0;
+		this.isJumping = false;
+		time.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				if (isJumping) {
+					counter = counter - 1;
+					if (counter == 10)
+						if (gamer != null)
+							if (!hasLeft())
+								gamer.sendMessage(ChatColor
+										.translateAlternateColorCodes('&',
+												"&9SCDropper &7> Поторапливайся. &410 &7секунд до кика!"));
+					if (counter == 0) {
+						if (gamer != null)
+							if (!hasLeft())
+								gamer.kickPlayer(ChatColor
+										.translateAlternateColorCodes('&',
+												"&4Профукал очередь."));
+						isJumping = false;
+						return;
+					}
+					gamer.setExp((30 - counter) / counter);
+				}
+			}
+		}, 0, 1000);
 	}
-	
-	public Player getPlayer(){
+
+	public Player getPlayer() {
 		return this.gamer;
 	}
-	
-	public Gamemode getGamemode(){
+
+	public void setJumper() {
+		counter = 30;
+		this.isJumping = true;
+	}
+
+	public void unsetJumper() {
+		counter = 30;
+		this.isJumping = false;
+	}
+
+	public Gamemode getGamemode() {
 		return this.gm;
 	}
-	
-	public int getFails(){
-		return this.fails;
+
+	public int getPoints() {
+		return this.points;
 	}
-	
-	public Tube getTube(){
-		return this.tube;
-	}
-	
-	public void setPlayer(Player player){
+
+	public void setPlayer(Player player) {
 		this.gamer = player;
 	}
-	
-	public void setGamemode(Gamemode gmode){
+
+	public void setGamemode(Gamemode gmode) {
 		this.gm = gmode;
 	}
-	
-	public void setFails(int f){
-		this.fails = f;
+
+	public void setPoints(int f) {
+		this.points = f;
 	}
-	
-	public void setTube(Tube f){
-		this.tube = f;
+
+	public void addPoints(int points2) {
+		this.points += points2;
 	}
+
 }

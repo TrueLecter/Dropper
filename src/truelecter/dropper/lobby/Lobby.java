@@ -13,18 +13,12 @@ import truelecter.dropper.Dropper;
 public class Lobby {
 
 	private File lobbyFile;
-
-	public Lobby(Dropper plugin) {
-		lobbyFile = new File(plugin.getDataFolder() + File.separator + "lobby.yml");
-	}
-
 	private LocationGenerator lobbyLocation;
 
-	public boolean isLobbyLocationWorldAvailable() {
-		if (isLobbyLocationSet()) {
-			return lobbyLocation.isWorldAvailable();
-		}
-		return false;
+	public Lobby(Dropper plugin) {
+		lobbyFile = new File(plugin.getDataFolder() + File.separator
+				+ "lobby.yml");
+		loadFromConfig();
 	}
 
 	public boolean isLobbyLocationSet() {
@@ -35,10 +29,12 @@ public class Lobby {
 		return lobbyLocation.getLocation();
 	}
 
-	public void setLobbyLocation(Location location) {
-		this.lobbyLocation = new LocationGenerator(location.getWorld().getName(), location.toVector(), location.getYaw(), location.getPitch());
+	public void setLobbyLocation(Location location){
+		this.lobbyLocation = new LocationGenerator(location.getWorld()
+				.getName(), location.toVector(), location.getYaw(),
+				location.getPitch());
 	}
-
+	
 	public void saveToConfig() {
 		FileConfiguration config = new YamlConfiguration();
 		if (isLobbyLocationSet()) {
@@ -53,15 +49,27 @@ public class Lobby {
 		}
 	}
 
+	public void saveToConfig(Vector vec, String worldname, float yaw,
+			float pitch) {
+		FileConfiguration config = new YamlConfiguration();
+		config.set("lobby.world", worldname);
+		config.set("lobby.vector", vec);
+		config.set("lobby.yaw", yaw);
+		config.set("lobby.pitch", pitch);
+		try {
+			config.save(lobbyFile);
+		} catch (IOException e) {
+		}
+	}
+
 	public void loadFromConfig() {
-		FileConfiguration config = YamlConfiguration.loadConfiguration(lobbyFile);
-		String worldname = config.getString("lobby.world", null);
-		Vector vector = config.getVector("lobby.vector", null);
+		FileConfiguration config = YamlConfiguration
+				.loadConfiguration(lobbyFile);
+		String worldname = config.getString("lobby.world", "world");
+		Vector vector = config.getVector("lobby.vector", new Vector(0, 80, 0));
 		float yaw = (float) config.getDouble("lobby.yaw", 0.0);
 		float pitch = (float) config.getDouble("lobby.pitch", 0.0);
-		if (worldname != null && vector != null) {
-			lobbyLocation = new LocationGenerator(worldname, vector, yaw, pitch);
-		}
+		lobbyLocation = new LocationGenerator(worldname, vector, yaw, pitch);
 	}
 
 }
